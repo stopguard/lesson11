@@ -39,7 +39,9 @@ class ComplexNumber:
 
     def __str__(self):
         """Перегруз преобразования в строку"""
-        return f"{self.a} {'-' if self.b < 0 else '+'} {abs(self.b)}i"
+        return f"{self.a}" \
+               f"{' - ' if self.b < 0 else ' + ' if self.b != 0 else ''}" \
+               f"{str(abs(self.b)) + 'i' if self.b != 0 else ''}"
 
 
 def str_to_num(num):
