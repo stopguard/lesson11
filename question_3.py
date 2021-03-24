@@ -13,3 +13,26 @@
     Класс-исключение должен не позволить пользователю ввести текст (не число) и отобразить соответствующее сообщение.
     При этом работа скрипта не должна завершаться.
 """
+from re import compile
+
+
+class NumberValidationError(Exception):
+    """Самопальное исключение"""
+    def __init__(self, number):
+        self.txt = f"NumberValidationError: {number} не является числом!"
+
+
+numbers = []
+REG = compile(r"^[+-]?[0-9]+\.?[0-9]*$")    # регулярка для валидации числа
+while True:                                 # крутим цикл пока не надоест
+    x = input('Введите число для добавления в список, или "end" для завершения: ')  # забираем x
+    if x.lower() == 'end':                      # проверка на желание завершить цикл
+        print("Завершение ввода")
+        break
+    try:                                        # перехват исключения
+        if not REG.match(x):                        # проверяем числа на вшивость
+            raise NumberValidationError(x)
+        numbers.append(float(x))                    # добавление преобразованного числа в список
+    except NumberValidationError as err:
+        print(err.txt)
+print(numbers)
