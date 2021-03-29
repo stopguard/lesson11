@@ -397,5 +397,5 @@ while True:
             crush_item()
     except (ModelValidationError, TargetValidationError) as err:
         print('Неудачный ввод:', err)
-    # except (ValueError, KeyError) as err:
-    #     print('Неудачный ввод:', err)
+    except (ValueError, KeyError) as err:
+        print('Неудачный ввод:', err)
