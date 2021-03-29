@@ -135,20 +135,24 @@ class Storage:
         result = f'Содержимое объекта [{self.name}]:\n'
         for item in self.office_eq_list:
             self_dict.setdefault('Оргтехника', {})
-            self_dict['Оргтехника'][item.model] = self_dict['Оргтехника'].setdefault(item.model, 0) + 1
+            self_dict['Оргтехника'][f'{item.__class__.__name__} {item.model}'] = \
+                self_dict['Оргтехника'].setdefault(f'{item.__class__.__name__} {item.model}', 0) + 1
         for item in self.furnitures:
             self_dict.setdefault('Мебель', {})
-            self_dict['Мебель'][item.model] = self_dict['Мебель'].setdefault(item.model, 0) + 1
+            self_dict['Мебель'][f'{item.__class__.__name__} {item.model}'] = \
+                self_dict['Мебель'].setdefault(f'{item.__class__.__name__} {item.model}', 0) + 1
         for item in self.damaged:
             self_dict.setdefault('Ремонтопригодное', {})
-            self_dict['Ремонтопригодное'][item.model] = self_dict['Ремонтопригодное'].setdefault(item.model, 0) + 1
+            self_dict['Ремонтопригодное'][f'{item.__class__.__name__} {item.model}'] = \
+                self_dict['Ремонтопригодное'].setdefault(f'{item.__class__.__name__} {item.model}', 0) + 1
         for item in self.crushed:
             self_dict.setdefault('Невосстановимое', {})
-            self_dict['Невосстановимое'][item.model] = self_dict['Невосстановимое'].setdefault(item.model, 0) + 1
+            self_dict['Невосстановимое'][f'{item.__class__.__name__} {item.model}'] = \
+                self_dict['Невосстановимое'].setdefault(f'{item.__class__.__name__} {item.model}', 0) + 1
         for key1, items in self_dict.items():
             result += f'\n{key1}'
             for key2 in sorted(self_dict[key1]):
-                result += f'\n{key2:.<11}: {self_dict[key1][key2]}'
+                result += f'\n{key2:.<20}: {self_dict[key1][key2]}'
         return result
 
     @staticmethod
@@ -222,7 +226,7 @@ class Storage:
             for eq in self.office_eq_list[:]:
                 print(eq.model)
                 if eq.model == self.eq_types[eq_type].model_dict[model]["model"]:
-                    self.targets[target][1].office_eq_list.add(eq)
+                    self.targets[target][1].office_eq_list.append(eq)
                     self.office_eq_list.remove(eq)
                     x += 1
                     break
@@ -258,8 +262,8 @@ class Storage:
         x = 0
         for number in range(quantity):
             for furn in self.furnitures[:]:
-                if furn.model == self.furnitures[furniture].model_dict[model]["model"]:
-                    self.targets[target][1].furnitures.add(furn)
+                if furn.model == self.furn_types[furniture].model_dict[model]["model"]:
+                    self.targets[target][1].furnitures.append(furn)
                     self.furnitures.remove(furn)
                     x += 1
                     break
@@ -274,7 +278,7 @@ class Storage:
     def repair(self):
         for eq in self.damaged[:]:
             if eq.__class__.__base__ == OfficeEquipment:
-                Storage.services['1'].office_eq_list.append(eq)
+                Storage.services['1'][1].office_eq_list.append(eq)
                 self.damaged.remove(eq)
             else:
                 Storage.services['1'].furnitures.append(eq)
